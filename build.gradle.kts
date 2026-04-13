@@ -36,6 +36,7 @@ javafx {
 }
 
 dependencies {
+    implementation("org.xerial:sqlite-jdbc:3.46.1.3")
     implementation("org.controlsfx:controlsfx:11.2.1")
     implementation("com.dlsc.formsfx:formsfx-core:11.6.0") {
         exclude(group = "org.openjfx")
