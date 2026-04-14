@@ -103,5 +103,42 @@ public class DashBoard {
         tableView.setItems(bookRows);
         tableView.setPlaceholder(new Label("No books found for this user."));
     }
+    public void loadBooks(){
+        bookRows.clear();
+
+        String sql = """
+        SELECT b.book_id, b.title, b.author,
+               bd.status, bd.current_page, bd.rating
+        FROM books b
+        JOIN book_details bd ON b.book_id = bd.book_id
+        WHERE bd.user_id = ?
+        ORDER BY b.title ASC
+        """;
+
+        Connection connection = databaseManager.getConnection();
+
+        try(PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setInt(1, currentUser.getUserId());
+
+            try(ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()){
+                    int rating = rs.getObject("rating") == null ? 0 : rs.getInt("rating");
+
+                    bookRows.add(new BookRow (
+                            rs.getInt("book_id"),
+                            rs.getString("title"),
+                            rs.getString("author"),
+                            rs.getString("status"),
+                            rs.getInt("current_page"),
+                            rating
+                    ));
+                }
+            }
+            statusLabel.setText("Loaded " + bookRows.size() + " book(s).");
+        } catch (SQLException e){
+            statusLabel.setText("Failed to load books.");
+            AppAlerts.showError("Database Error", "Could not load books:\n" + e.getMessage());
+        }
+    }
 }
 
