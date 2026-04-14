@@ -71,5 +71,37 @@ public class DashBoard {
 
       return root;
     }
+    private void configureTable(){
+        TableColumn<BookRow, Number> idColumn = new TableColumn<>("Book ID");
+        idColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getBookId()));
+
+        TableColumn<BookRow, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
+
+        TableColumn<BookRow, String> authorColumn = new TableColumn<>("Author");
+        authorColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
+
+        TableColumn<BookRow, String> statusColumn = new TableColumn<>("Status");
+        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
+
+        TableColumn<BookRow, Number> currentPageColumn = new TableColumn<>("Current Page");
+        currentPageColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCurrentPage()));
+
+        TableColumn<BookRow, Number> ratingColumn = new TableColumn<>("Rating");
+        ratingColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRating()));
+
+        tableView.getColumns().addAll(
+                idColumn,
+                titleColumn,
+                authorColumn,
+                statusColumn,
+                currentPageColumn,
+                ratingColumn
+        );
+
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        tableView.setItems(bookRows);
+        tableView.setPlaceholder(new Label("No books found for this user."));
+    }
 }
 
