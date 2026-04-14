@@ -13,11 +13,11 @@ repositories {
     mavenCentral()
 }
 
-val junitVersion = "5.12.1"
+//val junitVersion = "5.12.1"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -36,6 +36,8 @@ javafx {
 }
 
 dependencies {
+    implementation("org.xerial:sqlite-jdbc:3.51.3.0")
+    implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.controlsfx:controlsfx:11.2.1")
     implementation("com.dlsc.formsfx:formsfx-core:11.6.0") {
         exclude(group = "org.openjfx")
@@ -44,8 +46,10 @@ dependencies {
         exclude(group = "org.openjfx")
     }
     implementation("org.kordamp.ikonli:ikonli-javafx:12.3.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+    testImplementation(platform("org.junit:junit-bom:5.12.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {

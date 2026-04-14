@@ -16,6 +16,8 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+*.sqlite
+*.db
 
 ### Eclipse ###
 .apt_generated

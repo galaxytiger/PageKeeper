@@ -6,6 +6,7 @@ module stackotterflow.pagekeeper {
   requires com.dlsc.formsfx;
   requires net.synedra.validatorfx;
   requires org.kordamp.ikonli.javafx;
+  requires java.sql;
 
   opens stackotterflow.pagekeeper to javafx.fxml;
   exports stackotterflow.pagekeeper;
