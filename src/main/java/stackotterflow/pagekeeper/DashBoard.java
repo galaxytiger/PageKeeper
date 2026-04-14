@@ -158,5 +158,29 @@ public class DashBoard {
             }
         });
     }
+    private void deleteBookForCurrentUser(int bookId){
+        String sql = """
+        DELETE FROM book_details
+        WHERE user_id = ? AND book_id = ?
+        """;
+
+        Connection connection = databaseManager.getConnection();
+
+        try(PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setInt(1, currentUser.getUserId());
+            stmt.setInt(2, bookId);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if(rowsAffected == 1) {
+                AppAlerts.showSuccess("Book removed from dashboard");
+                loadBooks();
+            } else {
+                AppAlerts.showWarning("Delete Failed", "No matching book was removed.");
+            }
+        } catch (SQLException e){
+            AppAlerts.showError("Database Error", "Could not delete book:\n" + e.getMessage());
+        }
+    }
 }
 
