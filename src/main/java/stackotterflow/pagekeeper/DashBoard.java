@@ -140,5 +140,23 @@ public class DashBoard {
             AppAlerts.showError("Database Error", "Could not load books:\n" + e.getMessage());
         }
     }
+    private void handleEditSelected(){
+        BookRow selected = tableView.getSelectionModel().getSelectedItem();
+
+        if(selected == null){
+            AppAlerts.showWarning("No Selection", "Please select a book to delete.");
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Book");
+        confirm.setHeaderText("Delete selected book?");
+        confirm.setContentText("Are you sure you want to remove \"" + selected.getTitle() + "\" from your dashboard?");
+
+        confirm.showAndWait().ifPresent(result -> {
+            if(result == ButtonType.OK){
+                deleteBookForCurrentUser(selected.getBookId());
+            }
+        });
+    }
 }
 
