@@ -21,14 +21,30 @@ public class UserCrud implements UserDao {
       VALUES (?, ?, ?)
       """;
 
-    Connection connection = databaseManager.getConnection();
+    try {
+      Connection connection = databaseManager.getConnection();
+      if (connection == null) {
+        return false;
+      }
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+    try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, user.getRole());
       stmt.setString(2, user.getUsername());
       stmt.setString(3, user.getPassword());
 
-      return stmt.executeUpdate() == 1;
+      int rowsAffected = stmt.executeUpdate();
+      if (rowsAffected != 1) {
+        return false;
+      }
+
+      try (ResultSet genKeys = stmt.getGeneratedKeys()) {
+        if (genKeys.next()) {
+          user.setUserId(genKeys.getInt(1));
+        }
+      }
+
+      return true;
+     }
     } catch (SQLException e) {
       System.err.println("insert user failed: " + e.getMessage());
       return false;
@@ -42,7 +58,11 @@ public class UserCrud implements UserDao {
     WHERE username = ?
     """;
 
-    Connection connection = databaseManager.getConnection();
+    try {
+      Connection connection = databaseManager.getConnection();
+      if (connection == null) {
+        return null;
+      }
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setString(1, username);
@@ -57,6 +77,7 @@ public class UserCrud implements UserDao {
           );
         }
       }
+     }
     } catch (SQLException e) {
       System.err.println("queryByUsername failed: " + e.getMessage());
     }
@@ -72,7 +93,11 @@ public class UserCrud implements UserDao {
       WHERE user_id = ?
       """;
 
-    Connection connection = databaseManager.getConnection();
+    try{
+      Connection connection = databaseManager.getConnection();
+      if (connection == null) {
+        return null;
+      }
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setInt(1, userId);
@@ -87,6 +112,7 @@ public class UserCrud implements UserDao {
           );
         }
       }
+     }
     } catch (SQLException e) {
       System.err.println("queryById user failed: " + e.getMessage());
     }
@@ -102,7 +128,11 @@ public class UserCrud implements UserDao {
       WHERE user_id = ?
       """;
 
-    Connection connection = databaseManager.getConnection();
+    try {
+      Connection connection = databaseManager.getConnection();
+      if (connection == null) {
+        return false;
+      }
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setString(1, user.getRole());
@@ -111,6 +141,7 @@ public class UserCrud implements UserDao {
       stmt.setInt(4, user.getUserId());
 
       return stmt.executeUpdate() == 1;
+     }
     } catch (SQLException e) {
       System.err.println("update user failed: " + e.getMessage());
       return false;
@@ -121,11 +152,16 @@ public class UserCrud implements UserDao {
   public boolean delete(int userId) {
     String sql = "DELETE FROM users WHERE user_id = ?";
 
-    Connection connection = databaseManager.getConnection();
+    try {
+      Connection connection = databaseManager.getConnection();
+      if (connection == null) {
+        return false;
+      }
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setInt(1, userId);
       return stmt.executeUpdate() == 1;
+     }
     } catch (SQLException e) {
       System.err.println("delete user failed: " + e.getMessage());
       return false;

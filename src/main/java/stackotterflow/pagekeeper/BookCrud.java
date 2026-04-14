@@ -93,7 +93,7 @@ public class BookCrud implements BookDao {
         return false;
       }
 
-      try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      try (PreparedStatement stmt = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
         stmt.setString(1, book.getTitle());
         stmt.setString(2, book.getAuthor());
         stmt.setString(3, book.getIsbn());
@@ -101,7 +101,16 @@ public class BookCrud implements BookDao {
         stmt.setString(5, book.getSummary());
         stmt.setInt(6, book.getBookId());
 
-        return stmt.executeUpdate() == 1;
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected != 1) {
+          return false;
+        }
+        try (ResultSet genKeys = stmt.getGeneratedKeys()) {
+          if (genKeys.next()) {
+            book.setBookId(genKeys.getInt(1));
+          }
+        }
+        return true;
       }
     } catch (SQLException e) {
       System.err.println("update failed: " + e.getMessage());

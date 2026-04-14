@@ -14,6 +14,7 @@ public class Book {
   private int totalPages;
   private String summary;
 
+  // constructor for existing record
   public Book(int bookId, String title, String author, String isbn, int totalPages, String summary) {
     this.bookId = bookId;
     this.title = title;
@@ -23,6 +24,7 @@ public class Book {
     this.summary = summary;
   }
 
+  //constructor for new record
   public Book(String title, String author, String isbn, int totalPages, String summary) {
     this.title = title;
     this.author = author;

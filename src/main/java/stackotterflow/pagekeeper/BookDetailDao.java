@@ -6,6 +6,9 @@
  */
 package stackotterflow.pagekeeper;
 
-public class BookDetailDao {
-
+public interface BookDetailDao {
+  boolean insert(BookDetail bookDetail);
+  BookDetail queryById(int detailId);
+  boolean update(BookDetail bookDetail);
+  boolean delete(int detailId);
 }
