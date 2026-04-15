@@ -1,6 +1,6 @@
 /**
  * @author Anthony Torres
- * <p>
+ * A class for representing book metadata sch as title, author, ISBN, total pages, and summary.
  * created: 4/13/2026
  * @since 0.1.0
  */

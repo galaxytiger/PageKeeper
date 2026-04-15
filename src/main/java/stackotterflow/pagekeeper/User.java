@@ -1,6 +1,6 @@
 /**
  * @author Anthony Torres
- * <p>
+ * A class for representing User records such as username, password, and role
  * created: 4/13/2026
  * @since 0.1.0
  */

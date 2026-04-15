@@ -1,6 +1,6 @@
 /**
  * @author Anthony Torres
- * <p>
+ * Interface to define database operations available for Book
  * created: 4/13/2026
  * @since 0.1.0
  */

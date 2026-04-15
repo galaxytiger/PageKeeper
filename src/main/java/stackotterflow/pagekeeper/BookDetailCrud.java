@@ -1,6 +1,6 @@
 /**
  * @author Anthony Torres
- * <p>
+ * Implements database CRUD operations for Book Detail records INSERT, READ, UPDATE, DELETE
  * created: 4/13/2026
  * @since 0.1.0
  */

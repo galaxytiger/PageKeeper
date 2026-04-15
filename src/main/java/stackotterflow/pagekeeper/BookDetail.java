@@ -1,6 +1,7 @@
 /**
  * @author Anthony Torres
- * <p>
+ * A class for representing Book progress, keeping track of current page,
+ * status ('Want to Read', 'In Progress', 'Read'), borrowed, return date, rating, and reviews
  * created: 4/13/2026
  * @since 0.1.0
  */
