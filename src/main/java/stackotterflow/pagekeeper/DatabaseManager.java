@@ -30,7 +30,7 @@ public class DatabaseManager {
 
   // tables for db
   private void initializeDatabase() {
-    // user table
+    // user table, saving pw in plain text for now, might implement hashing if time allows
     String createUsersTable = """
       CREATE TABLE IF NOT EXISTS users (
           user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,17 +39,18 @@ public class DatabaseManager {
           password TEXT NOT NULL
       );
       """;
-    // table for book metadata
+    // table for book metadata, shared info not exclusive to user
     String createBooksTable = """
       CREATE TABLE IF NOT EXISTS books (
           book_id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
           author TEXT NOT NULL,
           isbn TEXT UNIQUE,
-          total_pages INTEGER NOT NULL CHECK (total_pages > 0)
+          total_pages INTEGER NOT NULL CHECK (total_pages > 0),
+          summary TEXT
       );
       """;
-    // table for book progress
+    // table for book progress, exclusive to user
     String createBookDetailsTable = """
       CREATE TABLE IF NOT EXISTS book_details (
           detail_id INTEGER PRIMARY KEY AUTOINCREMENT,
