@@ -31,6 +31,15 @@ class UserCrudTest {
     boolean result = userCrud.insert(user);
 
     assertTrue(result);
+    assertTrue(user.getUserId() > 0);
+
+    User insertedUser = userCrud.queryById(user.getUserId());
+
+    assertNotNull(insertedUser);
+    assertEquals(user.getUserId(), insertedUser.getUserId());
+    assertEquals("User", insertedUser.getRole());
+    assertEquals(username, insertedUser.getUsername());
+    assertEquals("1234", insertedUser.getPassword());
   }
 
   @Test
@@ -60,17 +69,15 @@ class UserCrudTest {
 
     boolean inserted = userCrud.insert(user);
     assertTrue(inserted);
+    assertTrue(user.getUserId() > 0);
 
-    User insertedUser = userCrud.queryByUsername(username);
-    assertNotNull(insertedUser);
+    user.setRole("Admin");
+    user.setPassword("5678");
 
-    insertedUser.setRole("Admin");
-    insertedUser.setPassword("5678");
-
-    boolean updated = userCrud.update(insertedUser);
+    boolean updated = userCrud.update(user);
     assertTrue(updated);
 
-    User updatedUser = userCrud.queryById(insertedUser.getUserId());
+    User updatedUser = userCrud.queryById(user.getUserId());
 
     assertNotNull(updatedUser);
     assertEquals("Admin", updatedUser.getRole());

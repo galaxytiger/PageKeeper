@@ -1,6 +1,6 @@
 /**
  * @author Anthony Torres
- * <p>
+ * A class for representing User records such as username, password, and role
  * created: 4/13/2026
  * @since 0.1.0
  */
@@ -12,6 +12,7 @@ public class User {
   private String username;
   private String password;
 
+  //constructor for existing record
   public User(int userId, String role, String username, String password) {
     this.userId = userId;
     this.role = role;
@@ -19,6 +20,7 @@ public class User {
     this.password = password;
   }
 
+  //constructor for new record
   public User(String role, String username, String password) {
     this.role = role;
     this.username = username;
