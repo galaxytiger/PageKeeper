@@ -80,6 +80,8 @@ public class BookDetailCrud implements BookDetailDao {
 
         try (ResultSet rs = stmt.executeQuery()) {
           if (rs.next()) {
+            int ratingValue = rs.getInt("rating");
+            Integer rating = rs.wasNull() ? null : ratingValue;
             return new BookDetail(
                 rs.getInt("detail_id"),
                 rs.getInt("user_id"),
@@ -88,7 +90,7 @@ public class BookDetailCrud implements BookDetailDao {
                 rs.getInt("current_page"),
                 rs.getBoolean("borrowed"),
                 rs.getString("return_date"),
-                rs.getObject("rating", Integer.class),
+                rating,
                 rs.getString("review")
             );
           }
