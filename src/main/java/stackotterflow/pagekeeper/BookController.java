@@ -7,6 +7,8 @@ package stackotterflow.pagekeeper;
  * created: 04/13/26
  * @since 0.1.0
  */
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -37,12 +39,18 @@ public class BookController {
 
     @FXML
     public void initialize() {
-        idColumn.setCellValueFactory(cellData -> cellData.getValue().bookIdProperty());
-        titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
-        authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
-        isbnColumn.setCellValueFactory(cellData -> cellData.getValue().isbnProperty());
-        pagesColumn.setCellValueFactory(cellData -> cellData.getValue().totalPagesProperty());
-        summaryColumn.setCellValueFactory(cellData -> cellData.getValue().summaryProperty());
+        idColumn.setCellValueFactory(cellData ->
+            new SimpleIntegerProperty(cellData.getValue().getBookId()));
+        titleColumn.setCellValueFactory(cellData ->
+            new SimpleStringProperty(cellData.getValue().getTitle()));
+        authorColumn.setCellValueFactory(cellData ->
+            new SimpleStringProperty(cellData.getValue().getAuthor()));
+        isbnColumn.setCellValueFactory(cellData ->
+            new SimpleStringProperty(cellData.getValue().getIsbn()));
+        pagesColumn.setCellValueFactory(cellData ->
+            new SimpleIntegerProperty(cellData.getValue().getTotalPages()));
+        summaryColumn.setCellValueFactory(cellData ->
+            new SimpleStringProperty(cellData.getValue().getSummary()));
 
         bookTable.setItems(books);
 

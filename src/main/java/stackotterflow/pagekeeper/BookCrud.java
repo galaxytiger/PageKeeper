@@ -6,6 +6,8 @@
  */
 package stackotterflow.pagekeeper;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookCrud implements BookDao {
   private final DatabaseManager databaseManager;
@@ -139,5 +141,40 @@ public class BookCrud implements BookDao {
       System.err.println("delete failed: " + e.getMessage());
       return false;
     }
+  }
+  @Override
+  public List<Book> getAllBooks() {
+    String sql = """
+        SELECT book_id, title, author, isbn, total_pages, summary
+        FROM books
+        ORDER BY title
+        """;
+
+    List<Book> books = new ArrayList<>();
+
+    try {
+      Connection connection = databaseManager.getConnection();
+      if (connection == null) {
+        return books;
+      }
+
+      try (PreparedStatement stmt = connection.prepareStatement(sql);
+          ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          books.add(new Book(
+              rs.getInt("book_id"),
+              rs.getString("title"),
+              rs.getString("author"),
+              rs.getString("isbn"),
+              rs.getInt("total_pages"),
+              rs.getString("summary")
+          ));
+        }
+      }
+    } catch (SQLException e) {
+      System.err.println("getAllBooks failed: " + e.getMessage());
+    }
+
+    return books;
   }
 }
