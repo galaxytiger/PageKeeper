@@ -6,9 +6,12 @@
  */
 package stackotterflow.pagekeeper;
 
+import java.util.List;
+
 public interface BookDao {
   boolean insert(Book book);
   Book queryById(int id);
   boolean update(Book book);
   boolean delete(int id);
+  List<Book> getAllBooks();
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/stackotterflow/pagekeeper/BookCrud.java" value="6ff5f334-a57e-4144-82fa-8d658d277e50" />
     <file url="file://$PROJECT_DIR$/src/main/java/stackotterflow/pagekeeper/DatabaseManager.java" value="db804b3c-0511-4f61-8d14-db503aec3fa6" />
   </component>
 </project>

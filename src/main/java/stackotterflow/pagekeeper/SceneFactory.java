@@ -1,4 +1,6 @@
 package stackotterflow.pagekeeper;
+import java.io.IOException;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -27,12 +29,19 @@ public class SceneFactory {
     }
 
     public void showLogin() {
-        Label label = new Label("Login Scene Placeholder");
-        StackPane root = new StackPane(label);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.setup(databaseManager, this);
 
-        Scene scene = new Scene(root, 600, 400);
-        stage.setScene(scene);
-        stage.show();
+            Scene scene = new Scene(root, 600, 400);
+            stage.setTitle("PageKeeper Login");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            AppAlerts.showError("Load Error", "Could not load login screen:\n" + e.getMessage());
+        }
     }
 
     public void showAddBook(User currentUser){
