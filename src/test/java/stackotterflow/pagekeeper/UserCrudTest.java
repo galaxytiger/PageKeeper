@@ -2,10 +2,19 @@ package stackotterflow.pagekeeper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Anthony Torres
+ * Testing database CRUD operations for User records INSERT, READ, UPDATE, DELETE
+ * created: 4/13/2026
+ * @since 0.1.0
+ */
+
 import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+
 
 class UserCrudTest {
 
