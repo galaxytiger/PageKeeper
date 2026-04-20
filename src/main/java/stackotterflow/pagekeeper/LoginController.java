@@ -14,9 +14,6 @@ import javafx.scene.control.TextField;
 public class LoginController {
 
   @FXML
-  private Label welcome;
-
-  @FXML
   private Label prompt;
 
   @FXML
@@ -25,12 +22,10 @@ public class LoginController {
   @FXML
   private PasswordField passwordField;
 
-  private DatabaseManager databaseManager;
   private SceneFactory sceneFactory;
   private UserCrud userCrud;
 
   public void setup(DatabaseManager databaseManager, SceneFactory sceneFactory) {
-    this.databaseManager = databaseManager;
     this.sceneFactory = sceneFactory;
     this.userCrud = new UserCrud(databaseManager);
   }
@@ -38,7 +33,7 @@ public class LoginController {
   @FXML
   public void handleLogin() {
     String username = usernameField.getText().trim();
-    String password = passwordField.getText();
+    String password = passwordField.getText().trim();
 
     if (username.isEmpty() || password.isEmpty()) {
       prompt.setText("Please enter your username and password");
@@ -49,18 +44,21 @@ public class LoginController {
 
     if (user == null) {
       prompt.setText("User not found, please check username or register");
+      return;
     }
 
     if (!user.getPassword().equals(password)) {
       prompt.setText("Incorrect password. please try again");
+      return;
     }
+
     prompt.setText("Login successful.");
     sceneFactory.showDashboard(user);
   }
 
   @FXML
   private void handleRegistration() {
-    prompt.setText("Need to set up Registration");
+    sceneFactory.showRegistration();
   }
 
 }
