@@ -30,13 +30,29 @@ public class SceneFactory {
 
     public void showLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("login-view.fxml"));
             Parent root = loader.load();
             LoginController controller = loader.getController();
             controller.setup(databaseManager, this);
 
             Scene scene = new Scene(root, 600, 400);
             stage.setTitle("PageKeeper Login");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            AppAlerts.showError("Load Error", "Could not load login screen:\n" + e.getMessage());
+        }
+    }
+
+    public void showRegistration () {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("registration-view.fxml"));
+            Parent root = loader.load();
+            RegistrationController controller = loader.getController();
+            controller.setup(databaseManager, this);
+
+            Scene scene = new Scene(root, 600, 400);
+            stage.setTitle("PageKeeper Registration");
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

@@ -2,7 +2,7 @@ package stackotterflow.pagekeeper;
 
 /**
  * @author Anthony Torres
- * Testing LogIn Controller logic
+ * Testing Registration Controller logic
  * created: 4/20/2026
  * @since 0.1.0
  */
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class LoginControllerTest {
+class RegistrationControllerTest {
 
   @BeforeEach
   void setUp() {
@@ -28,6 +28,6 @@ class LoginControllerTest {
   }
 
   @Test
-  void handleLogin() {
+  void handleRegister() {
   }
 }
