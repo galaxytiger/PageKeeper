@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 
 class LoginControllerTest {
 
-  LoginController login = new LoginController();
+
 
 
   // A helper method to test via reflection
