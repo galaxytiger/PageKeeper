@@ -1,6 +1,7 @@
 /**
  * @author Anthony Torres
- * Log in Scene allowing users to log in. Checks db to see if user exists, if not, prompts to register
+ * Log in Scene allowing users to log in.
+ * Checks db to see if user exists, if not, prompts to register
  * created: 4/20/2026
  * @since 0.1.0
  */

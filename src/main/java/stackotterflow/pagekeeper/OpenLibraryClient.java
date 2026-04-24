@@ -1,6 +1,7 @@
 /**
  * @author Anthony Torres
- * <p>
+ * Class for calling Open Library Search and Works APIs, parsing JSON results, and returning book metadata.
+ * https://openlibrary.org/developers/api
  * created: 4/23/2026
  * @since 0.1.0
  */
@@ -28,7 +29,7 @@ public class OpenLibraryClient {
 
   public OpenLibraryClient() {
     this.httpClient = HttpClient.newBuilder()
-        .connectTimeout(Duration.ofSeconds(10))
+        .connectTimeout(Duration.ofSeconds(30))
         .build();
     this.objectMapper = new ObjectMapper();
   }
@@ -39,12 +40,13 @@ public class OpenLibraryClient {
       return List.of();
     }
 
+    // encode user search results for search url
     String encodedQuery = URLEncoder.encode(searchQuery, StandardCharsets.UTF_8);
     String uri = SEARCH_URL + "?q=" + encodedQuery + "&limit=20";
 
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(uri))
-        .timeout(Duration.ofSeconds(10))
+        .timeout(Duration.ofSeconds(30))
         .header("Accept", "application/json")
         .header("User-Agent", USER_AGENT)
         .GET()
@@ -64,6 +66,7 @@ public class OpenLibraryClient {
       return results;
     }
 
+    // Map fields from Open Library results to BookSearchResult object
     for (JsonNode doc : docs) {
       String title = getText(doc, "title");
       String author = getFirstArrayText(doc, "author_name");
@@ -98,7 +101,7 @@ public class OpenLibraryClient {
 
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(uri))
-        .timeout(Duration.ofSeconds(10))
+        .timeout(Duration.ofSeconds(30))
         .header("Accept", "application/json")
         .header("User-Agent", USER_AGENT)
         .GET()
@@ -129,6 +132,7 @@ public class OpenLibraryClient {
     return null;
   }
 
+  // cover id for book cover
   public String buildCoverUrl(Integer coverId) {
     if (coverId == null) {
       return null;

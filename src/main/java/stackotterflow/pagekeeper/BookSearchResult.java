@@ -1,6 +1,6 @@
 /**
  * @author Anthony Torres
- * <p>
+ * A class to store book metadata returned from OpenLibraryClient search results.
  * created: 4/23/2026
  * @since 0.1.0
  */
@@ -15,6 +15,7 @@ public class BookSearchResult {
   private final String openLibkey;
   private final Integer totalPages;
   private final String summary;
+
   public BookSearchResult(String title, String author, String isbn, int year, Integer coverID, String openLibkey, Integer totalPages, String summary) {
     this.title = title;
     this.author = author;

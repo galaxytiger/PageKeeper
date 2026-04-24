@@ -1,6 +1,7 @@
 /**
  * @author Anthony Torres
- * <p>
+ * Controller for the registration view.
+ * Handles user input validation and account creation.
  * created: 4/20/2026
  * @since 0.1.0
  */
