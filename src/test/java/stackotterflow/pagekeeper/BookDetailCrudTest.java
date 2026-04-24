@@ -50,7 +50,7 @@ class BookDetailCrudTest {
   }
 
   private Book makeBook() {
-    Book book = new Book("Dune", "Frank Herbert", fakeIsbn(), 412, "Sci-fi");
+    Book book = new Book("Dune", "Frank Herbert", fakeIsbn(), 412, "Sci-fi", 1965);
     assertTrue(bookCrud.insert(book));
     assertTrue(book.getBookId() > 0);
     return book;

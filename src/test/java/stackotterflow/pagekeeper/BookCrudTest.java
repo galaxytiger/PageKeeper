@@ -8,8 +8,6 @@ package stackotterflow.pagekeeper;
  */
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.sql.PreparedStatement;
 import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +39,7 @@ class BookCrudTest {
 
   void insert() {
     String isbn = fakeISBN();
-    Book book = new Book("Project Hail Mary", "Andy Weir", isbn, 496, "Not interstellar");
+    Book book = new Book("Project Hail Mary", "Andy Weir", isbn, 496, "Not interstellar", 2021);
     boolean inserted = bookCrud.insert(book);
 
     assertTrue(inserted);
@@ -58,7 +56,7 @@ class BookCrudTest {
   @Test
   void queryById() {
     String isbn = fakeISBN();
-    Book book = new Book("Dune", "Frank Herbert", isbn, 412, "Jesus in space");
+    Book book = new Book("Dune", "Frank Herbert", isbn, 412, "Jesus in space", 1965);
     assertTrue(bookCrud.insert(book));
 
     Book savedBook = bookCrud.queryById(book.getBookId());
@@ -75,7 +73,7 @@ class BookCrudTest {
   @Test
   void update() {
     String isbn = fakeISBN();
-    Book book = new Book("Invincible", "unknown", isbn, 1, "unknown");
+    Book book = new Book("Invincible", "unknown", isbn, 1, "unknown", 0);
     assertTrue(bookCrud.insert(book));
 
     book.setTitle("Invincible Vol. 1");
@@ -99,7 +97,7 @@ class BookCrudTest {
   @Test
   void delete() {
     String isbn = fakeISBN();
-    Book book = new Book("Dune", "Frank Herbert", isbn, 412, "Jesus in space");
+    Book book = new Book("Dune", "Frank Herbert", isbn, 412, "Jesus in space", 1965);
     assertTrue(bookCrud.insert(book));
     boolean deleted = bookCrud.delete(book.getBookId());
 

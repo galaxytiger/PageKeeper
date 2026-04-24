@@ -46,8 +46,9 @@ public class DatabaseManager {
           title TEXT NOT NULL,
           author TEXT NOT NULL,
           isbn TEXT UNIQUE,
-          total_pages INTEGER NOT NULL CHECK (total_pages > 0),
-          summary TEXT
+          total_pages INTEGER CHECK (total_pages >= 0),
+          summary TEXT,
+          year INTEGER
       );
       """;
     // table for book progress, exclusive to user

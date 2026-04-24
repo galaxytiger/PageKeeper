@@ -11,26 +11,29 @@ public class Book {
   private String title;
   private String author;
   private String isbn;
-  private int totalPages;
+  private Integer totalPages;
   private String summary;
+  private Integer year;
 
   // constructor for existing record
-  public Book(int bookId, String title, String author, String isbn, int totalPages, String summary) {
+  public Book(int bookId, String title, String author, String isbn, Integer totalPages, String summary, Integer year) {
     this.bookId = bookId;
     this.title = title;
     this.author = author;
     this.isbn = isbn;
     this.totalPages = totalPages;
     this.summary = summary;
+    this.year = year;
   }
 
   //constructor for new record
-  public Book(String title, String author, String isbn, int totalPages, String summary) {
+  public Book(String title, String author, String isbn, Integer totalPages, String summary, Integer year) {
     this.title = title;
     this.author = author;
     this.isbn = isbn;
     this.totalPages = totalPages;
     this.summary = summary;
+    this.year = year;
   }
 
   public int getBookId() {
@@ -65,11 +68,11 @@ public class Book {
     this.isbn = isbn;
   }
 
-  public int getTotalPages() {
+  public Integer getTotalPages() {
     return totalPages;
   }
 
-  public void setTotalPages(int totalPages) {
+  public void setTotalPages(Integer totalPages) {
     this.totalPages = totalPages;
   }
 
@@ -79,5 +82,11 @@ public class Book {
 
   public void setSummary(String summary) {
     this.summary = summary;
+  }
+  public Integer getYear() {
+    return year;
+  }
+  public void setYear(Integer year) {
+    this.year = year;
   }
 }

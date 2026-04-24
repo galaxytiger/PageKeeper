@@ -13,8 +13,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
   xmlns:fx="http://javafx.com/fxml/1"
@@ -44,12 +44,12 @@
   <center>
     <VBox spacing="12.0" BorderPane.alignment="CENTER">
       <padding>
-        <Insets top="0.0" right="20.0" bottom="10.0" left="20.0"/>
+        <Insets left="20.0" right="20.0"/>
       </padding>
 
       <Label text="Search Results" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
 
-      <TableView fx:id="searchResultsTable" prefHeight="260.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="searchResultsTable" prefHeight="360.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="resultTitleColumn" text="Title" prefWidth="320.0"/>
           <TableColumn fx:id="resultAuthorColumn" text="Author" prefWidth="220.0"/>
@@ -70,13 +70,22 @@
 
       <Label text="Selected Book" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
 
-      <GridPane hgap="12.0" vgap="10.0">
-        <columnConstraints>
-          <ColumnConstraints minWidth="120.0"/>
-          <ColumnConstraints hgrow="ALWAYS"/>
-          <ColumnConstraints minWidth="120.0"/>
-          <ColumnConstraints hgrow="ALWAYS"/>
-        </columnConstraints>
+      <HBox spacing="20.0">
+
+        <ImageView fx:id="coverImageView"
+          fitWidth="120.0"
+          fitHeight="180.0"
+          preserveRatio="true"
+        />
+
+        <GridPane hgap="12.0" vgap="10.0" HBox.hgrow="ALWAYS">
+
+          <columnConstraints>
+            <ColumnConstraints minWidth="90.0"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints minWidth="110.0"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+          </columnConstraints>
 
         <Label text="Title:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -91,8 +100,7 @@
         <TextField fx:id="totalPagesField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
 
         <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="statusComboBox" prefWidth="180.0"
-          GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="statusComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
         <Label text="Current Page:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
         <TextField fx:id="currentPageField" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
@@ -104,7 +112,8 @@
           GridPane.rowIndex="3"
           GridPane.columnIndex="1"
           GridPane.columnSpan="3"/>
-      </GridPane>
+        </GridPane>
+      </HBox>
 
       <HBox spacing="10.0">
         <Button text="Save to Library" onAction="#handleAddBook"/>
