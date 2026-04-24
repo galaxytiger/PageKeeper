@@ -38,7 +38,11 @@ class LoginControllerTest {
 
   @BeforeAll
   static void initJavaFX() {
-    Platform.startup(() -> {});
+    try {
+      Platform.startup(() -> {});
+    } catch (IllegalStateException e) {
+      // JavaFX already initialized
+    }
   }
 
   @AfterEach
