@@ -7,8 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.util.Stack;
-
 public class SceneFactory {
     private final Stage stage;
     private final DatabaseManager databaseManager;
@@ -61,13 +59,20 @@ public class SceneFactory {
     }
 
     public void showAddBook(User currentUser){
-        Label label = new Label("Add Book Scene Placeholder");
-        StackPane root = new StackPane(label);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addBook-view.fxml"));
+            Parent root = loader.load();
 
-        Scene scene = new Scene(root, 600, 400);
-        stage.setTitle("Add Book");
-        stage.setScene(scene);
-        stage.show();
+            BookController controller = loader.getController();
+            controller.setup(databaseManager, this, currentUser);
+
+            Scene scene = new Scene(root, 1000, 700);
+            stage.setTitle("Add Book");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            AppAlerts.showError("Load Error", "Could not load add book screen:\n" + e.getMessage());
+        }
     }
 
     public void showEditBook(User currentUser, int bookId){

@@ -8,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,6 +19,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.util.converter.IntegerStringConverter;
 
 public class DashBoard {
     private final DatabaseManager databaseManager;
@@ -26,6 +29,8 @@ public class DashBoard {
     private final TableView<BookRow> tableView = new TableView<>();
     private final ObservableList<BookRow> bookRows = FXCollections.observableArrayList();
     private final Label statusLabel = new Label("Ready.");
+
+    private boolean editMode = false;
 
     public DashBoard(DatabaseManager databaseManager, User currentUser, SceneFactory sceneFactory) {
         this.databaseManager = databaseManager;
@@ -50,7 +55,7 @@ public class DashBoard {
 
         refreshButton.setOnAction(e -> loadBooks());
         addButton.setOnAction(e -> sceneFactory.showAddBook(currentUser));
-        editButton.setOnAction(e -> handleEditSelected());
+        editButton.setOnAction(e -> toggleEditMode(editButton));
         deleteButton.setOnAction(e -> handleDeleteSelected());
         logoutButton.setOnAction(e -> sceneFactory.showLogin());
 
@@ -87,28 +92,87 @@ public class DashBoard {
 
         TableColumn<BookRow, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
+        statusColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
+            "Want to Read",
+            "In Progress",
+            "Read"
+        ));
+        statusColumn.setOnEditCommit(event -> {
+            BookRow row = event.getRowValue();
+            String newStatus = event.getNewValue();
 
-        TableColumn<BookRow, Number> currentPageColumn = new TableColumn<>("Current Page");
-        currentPageColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCurrentPage()));
+            if (newStatus == null || newStatus.isBlank()) {
+                tableView.refresh();
+                return;
+            }
+
+            if (updateBookStatus(row.getBookId(), newStatus)) {
+                row.setStatus(newStatus);
+                tableView.refresh();
+                statusLabel.setText("Status updated for \"" + row.getTitle() + "\".");
+            } else {
+                tableView.refresh();
+                AppAlerts.showError("Update Failed", "Could not update book status.");
+            }
+        });
+
+        TableColumn<BookRow, Integer> currentPageColumn = new TableColumn<>("Current Page");
+        currentPageColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCurrentPage()).asObject());
+        currentPageColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+
+        currentPageColumn.setOnEditCommit(event -> {
+            BookRow row = event.getRowValue();
+            int newPageValue = event.getNewValue() == null ? 0 : event.getNewValue();
+
+            if (newPageValue < 0) {
+                tableView.refresh();
+                AppAlerts.showWarning("Invalid Page", "Current page cannot be negative.");
+                return;
+            }
+
+            if (updateCurrentPage(row.getBookId(), newPageValue)) {
+                row.setCurrentPage(newPageValue);
+                tableView.refresh();
+                statusLabel.setText("Current page updated for \"" + row.getTitle() + "\".");
+            } else {
+                tableView.refresh();
+                AppAlerts.showError("Update Failed", "Could not update current page.");
+            }
+        });
 
         TableColumn<BookRow, Number> ratingColumn = new TableColumn<>("Rating");
         ratingColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRating()));
 
         tableView.getColumns().clear();
         tableView.getColumns().addAll(
-                idColumn,
-                titleColumn,
-                authorColumn,
-                statusColumn,
-                currentPageColumn,
-                ratingColumn
+            idColumn,
+            titleColumn,
+            authorColumn,
+            statusColumn,
+            currentPageColumn,
+            ratingColumn
         );
 
+        tableView.setEditable(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.setItems(bookRows);
         tableView.setPlaceholder(new Label("No books found for this user."));
     }
+    
+    private void toggleEditMode(Button editButton) {
+        editMode = !editMode;
+        tableView.setEditable(editMode);
 
+        if (editMode) {
+            editButton.setText("Save");
+            statusLabel.setText("Edit mode enabled. Update status or current page.");
+        } else {
+            editButton.setText("Edit");
+            statusLabel.setText("Changes saved.");
+            tableView.refresh();
+        }
+    }
+    
     public void loadBooks() {
         bookRows.clear();
 
@@ -145,6 +209,45 @@ public class DashBoard {
         } catch (SQLException e) {
             statusLabel.setText("Failed to load books.");
             AppAlerts.showError("Database Error", "Could not load books:\n" + e.getMessage());
+        }
+    }
+    private boolean updateBookStatus(int bookId, String newStatus) {
+        String sql = """
+            UPDATE book_details
+            SET status = ?
+            WHERE user_id = ? AND book_id = ?
+            """;
+
+        Connection connection = databaseManager.getConnection();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, newStatus);
+            stmt.setInt(2, currentUser.getUserId());
+            stmt.setInt(3, bookId);
+            return stmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            AppAlerts.showError("Database Error", "Could not update status:\n" + e.getMessage());
+            return false;
+        }
+    }
+
+    private boolean updateCurrentPage(int bookId, int newCurrentPage) {
+        String sql = """
+            UPDATE book_details
+            SET current_page = ?
+            WHERE user_id = ? AND book_id = ?
+            """;
+
+        Connection connection = databaseManager.getConnection();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, newCurrentPage);
+            stmt.setInt(2, currentUser.getUserId());
+            stmt.setInt(3, bookId);
+            return stmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            AppAlerts.showError("Database Error", "Could not update current page:\n" + e.getMessage());
+            return false;
         }
     }
 
@@ -208,8 +311,8 @@ public class DashBoard {
         private final int bookId;
         private final String title;
         private final String author;
-        private final String status;
-        private final int currentPage;
+        private String status;
+        private int currentPage;
         private final int rating;
 
         public BookRow(int bookId, String title, String author, String status, int currentPage, int rating) {
@@ -237,8 +340,16 @@ public class DashBoard {
             return status;
         }
 
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
         public int getCurrentPage() {
             return currentPage;
+        }
+
+        public void setCurrentPage(int currentPage) {
+            this.currentPage = currentPage;
         }
 
         public int getRating() {

@@ -36,6 +36,7 @@ javafx {
 }
 
 dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     implementation("org.xerial:sqlite-jdbc:3.51.3.0")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.controlsfx:controlsfx:11.2.1")

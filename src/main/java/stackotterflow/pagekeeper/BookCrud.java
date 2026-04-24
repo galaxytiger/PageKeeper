@@ -19,8 +19,8 @@ public class BookCrud implements BookDao {
   @Override
   public boolean insert(Book book) {
     String sql = """
-      INSERT INTO books (title, author, isbn, total_pages, summary)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO books (title, author, isbn, total_pages, summary, year)
+      VALUES (?, ?, ?, ?, ?, ?)
       """;
 
     try {
@@ -34,8 +34,17 @@ public class BookCrud implements BookDao {
         stmt.setString(1, book.getTitle());
         stmt.setString(2, book.getAuthor());
         stmt.setString(3, book.getIsbn());
-        stmt.setInt(4, book.getTotalPages());
+        if (book.getTotalPages() == null) {
+          stmt.setNull(4, Types.INTEGER);
+        } else {
+          stmt.setInt(4, book.getTotalPages());
+        }
         stmt.setString(5, book.getSummary());
+        if (book.getYear() == null) {
+          stmt.setNull(6, Types.INTEGER);
+        } else {
+          stmt.setInt(6, book.getYear());
+        }
 
         int rowsAffected = stmt.executeUpdate();
         if (rowsAffected != 1) {
@@ -59,7 +68,7 @@ public class BookCrud implements BookDao {
   @Override
   public Book queryById(int id) {
     String sql = """
-      SELECT book_id, title, author, isbn, total_pages, summary
+      SELECT book_id, title, author, isbn, total_pages, summary, year
       FROM books
       WHERE book_id = ?
       """;
@@ -81,7 +90,8 @@ public class BookCrud implements BookDao {
                 rs.getString("author"),
                 rs.getString("isbn"),
                 rs.getInt("total_pages"),
-                rs.getString("summary")
+                rs.getString("summary"),
+                rs.getInt("year")
             );
           }
         }
@@ -97,7 +107,7 @@ public class BookCrud implements BookDao {
   public boolean update(Book book) {
     String sql = """
       UPDATE books
-      SET title = ?, author = ?, isbn = ?, total_pages = ?, summary = ?
+      SET title = ?, author = ?, isbn = ?, total_pages = ?, summary = ?, year = ?
       WHERE book_id = ?
       """;
 
@@ -113,7 +123,8 @@ public class BookCrud implements BookDao {
         stmt.setString(3, book.getIsbn());
         stmt.setInt(4, book.getTotalPages());
         stmt.setString(5, book.getSummary());
-        stmt.setInt(6, book.getBookId());
+        stmt.setInt(6, book.getYear());
+        stmt.setInt(7, book.getBookId());
 
         return stmt.executeUpdate() == 1;
       }
@@ -145,7 +156,7 @@ public class BookCrud implements BookDao {
   @Override
   public List<Book> getAllBooks() {
     String sql = """
-        SELECT book_id, title, author, isbn, total_pages, summary
+        SELECT book_id, title, author, isbn, total_pages, summary, year
         FROM books
         ORDER BY title
         """;
@@ -167,7 +178,8 @@ public class BookCrud implements BookDao {
               rs.getString("author"),
               rs.getString("isbn"),
               rs.getInt("total_pages"),
-              rs.getString("summary")
+              rs.getString("summary"),
+              rs.getInt("year")
           ));
         }
       }
